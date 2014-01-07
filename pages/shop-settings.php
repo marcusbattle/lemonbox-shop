@@ -13,6 +13,13 @@
 			<li>Live Secret<input type="text" name="stripe_live_secret_key" value="<?php echo get_option( 'stripe_live_secret_key' ); ?>" /></li>
 			<li>Live Publishable<input type="text" name="stripe_live_publishable_key" value="<?php echo get_option( 'stripe_live_publishable_key' ); ?>" /></li>
 		</ul>
+		<h4>Mode</h4>
+		<select name="stripe_mode" data-value="<?php echo get_option( 'stripe_mode' ); ?>">
+			<option value="test">Test</option>
+			<option value="live">Live</option>
+		</select>
+		<p>&nbsp;</p>
 		<button type="submit">Update Settings</button>
 	</form>
 </div>
+

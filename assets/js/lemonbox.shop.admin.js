@@ -2,6 +2,8 @@
 
 	$(document).ready(function(){
 
+		$('#lemonbox-shop-settings select[name="stripe_mode"]').val( $('#lemonbox-shop-settings select[name="stripe_mode"]').data('value') );
+
 		$('#lemonbox-shop-settings button[type="submit"]').on('click', function(e){
 			e.preventDefault();
 

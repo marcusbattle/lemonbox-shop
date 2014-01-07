@@ -47,6 +47,7 @@
 
         register_post_type( 'lemonbox_product', $args );
 
+        add_option( 'stripe_mode', 'test', '', true );
         add_option( 'stripe_test_secret_key', '', '', true );
         add_option( 'stripe_test_publishable_key', '', '', true );
         add_option( 'stripe_live_secret_key', '', '', true );
@@ -102,7 +103,8 @@
 
     	extract( $_POST );
 
-    	update_option( 'stripe_test_secret_key', $stripe_test_secret_key );
+    	update_option( 'stripe_mode', $stripe_mode );
+        update_option( 'stripe_test_secret_key', $stripe_test_secret_key );
     	update_option( 'stripe_test_publishable_key', $stripe_test_publishable_key );
     	update_option( 'stripe_live_secret_key', $stripe_live_secret_key );
     	update_option( 'stripe_live_publishable_key', $stripe_live_publishable_key );
@@ -114,9 +116,27 @@
 
     function lbox_get_products() {
 
+        $args = array(
+            'post_type' => 'lemonbox_product',
+            'post_status' => 'publish'
+        );
+
+        $query = new WP_Query( $args );
+
+        foreach ( $query->posts as $product ) {
+            $product->price = get_post_meta( $product->ID, 'price', true );
+        }
+
+        return $query->posts;
+
+    }
+
+    function lemonbox_get_product( $product_id ) {
+
     	$args = array(
     		'post_type' => 'lemonbox_product',
-    		'post_status' => 'publish'
+    		'post_status' => 'publish',
+            'ID' => $product_id
     	);
 
     	$query = new WP_Query( $args );
@@ -130,39 +150,14 @@
     }
 
     function lemonbox_post_payments() {
-    	
-    	// Is this person a lemonbox user?
-    	$user_id = get_current_user_id();
 
-    	// Does this user have an existing stripe token? No? Make one.
-    	if ( $user_id ) $stripe_user = get_user_meta( $user_id, 'stripe_customer_id', 'true' ); 
-    	if ( !$stripe_user ) $stripe_user = stripe_create_user( $user_id );
+        $product = lemonbox_get_product( $_POST['product_id'] );
 
-        if ( !$stripe_user ) {
-            echo "something bad happened";
-        }
-
-        $updated_user = stripe_update_user( $stripe_user );
-
-        // Check if credit card was added successfully
-        if( isset($updated_user->error) ) {
-            echo json_encode( array( 'success' => false, 'msg' => $updated_user->error->message ) );
-            exit;
-        }
-
-        $charge = stripe_create_charge( $stripe_user );
-
-        // Check to see if charge was processed
-        if( isset($charge->error) ) {
-            return array( 'success' => false, 'msg' => $updated_user->error->message );
-        } else {
-            // print_r( $charge );
-            return array( 'success' => true, 'msg' => 'Your card ending in ' . $charge->card->last4 . ' was successfully charged.' );
-        }
-
+        if ( $product ) {
+            $purchase_info = $product[0]->post_title . ' | Qty: ' . $_POST['quantity'];
+    	    return pay_with_stripe( $purchase_info );
+        } 
     }
-
-    
 
 	add_action( 'init', 'lbox_shop_init' );
 	add_action(	'admin_menu', 'lemonbox_shop_admin_menu');
