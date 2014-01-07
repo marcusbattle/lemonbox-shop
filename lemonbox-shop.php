@@ -129,21 +129,36 @@
 
     }
 
-    function lbox_post_payments() {
+    function lemonbox_post_payments() {
     	
-    	print_r( $_POST['fields'] );
     	// Is this person a lemonbox user?
     	$user_id = get_current_user_id();
 
-    	// Does this user have an existing stripe token?
+    	// Does this user have an existing stripe token? No? Make one.
     	if ( $user_id ) $stripe_user = get_user_meta( $user_id, 'stripe_customer_id', 'true' ); 
+    	if ( !$stripe_user ) $stripe_user = stripe_create_user( $user_id );
 
-    	if ( !$stripe_user ) stripe_create_user( $user_id );
+        if ( !$stripe_user ) {
+            echo "something bad happened";
+        }
 
-    	// No? Add them to lemonbox
-    	// Create them in stripe
-    	// Add their stripe id to their usermeta data
-    	// Proceed with transaction
+        $updated_user = stripe_update_user( $stripe_user );
+
+        // Check if credit card was added successfully
+        if( isset($updated_user->error) ) {
+            echo json_encode( array( 'success' => false, 'msg' => $updated_user->error->message ) );
+            exit;
+        }
+
+        $charge = stripe_create_charge( $stripe_user );
+
+        // Check to see if charge was processed
+        if( isset($charge->error) ) {
+            return array( 'success' => false, 'msg' => $updated_user->error->message );
+        } else {
+            // print_r( $charge );
+            return array( 'success' => true, 'msg' => 'Your card ending in ' . $charge->card->last4 . ' was successfully charged.' );
+        }
 
     }
 
@@ -152,7 +167,7 @@
 	add_action( 'init', 'lbox_shop_init' );
 	add_action(	'admin_menu', 'lemonbox_shop_admin_menu');
 	add_action( 'admin_enqueue_scripts', 'lemonbox_load_admin_shop_assets' );
-	add_action( 'lemonbox_post_payments', 'lbox_post_payments', 10, 0 );
+	add_action( 'lemonbox_post_payments', 'lemonbox_post_payments', 10, 0 );
 
 	add_action( 'wp_ajax_lemonbox_update_shop_settings', 'lemonbox_update_shop_settings' );
 ?>
