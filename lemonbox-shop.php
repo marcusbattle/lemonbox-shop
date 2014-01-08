@@ -136,7 +136,7 @@
     	$args = array(
     		'post_type' => 'lemonbox_product',
     		'post_status' => 'publish',
-            'ID' => $product_id
+            'p' => $product_id
     	);
 
     	$query = new WP_Query( $args );
