@@ -154,8 +154,19 @@
         $product = lemonbox_get_product( $_POST['product_id'] );
 
         if ( $product ) {
+
             $purchase_info = $product[0]->post_title . ' | Qty: ' . $_POST['quantity'];
-    	    return pay_with_stripe( $purchase_info );
+
+            if ( $_POST['payment_type'] == 'credit' ) {
+
+        	    return pay_with_stripe( $purchase_info );
+
+            } else {
+
+                return array( 'success' => true, 'msg' => 'Your purchase was successful! ' . $purchase_info );
+
+            }
+
         } 
     }
 
