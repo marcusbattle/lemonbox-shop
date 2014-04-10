@@ -213,10 +213,37 @@
         } 
     }
 
+    function store_meta_boxes() {
+        add_meta_box( 'product_details', 'Product Details', 'product_meta_box_product_details', 'lemonbox_product', 'normal', 'high' );
+    }
+
+    function product_meta_box_product_details( $post ) {
+
+        $product_price = get_post_meta( $post->ID, 'product_price', true );
+
+        echo '<p><strong>Price</strong></p>';
+        echo '<input type="text" name="product_price" placeholder="$10.00" value="' . $product_price . '" />';
+        echo '<a href="#" id="insert-media-button" class="button insert-media add_media" data-editor="excerpt" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a>';
+    }
+
+    function save_product_details( $post_id ) {
+
+        if (isset($_REQUEST['product_price'])) {
+
+            $_REQUEST['product_price'] = str_replace('$', '', $_REQUEST['product_price']);
+            update_post_meta($post_id, 'product_price', $_REQUEST['product_price']);
+
+        }
+
+    }
+
 	add_action( 'init', 'lbox_shop_init' );
 	add_action(	'admin_menu', 'lemonbox_shop_admin_menu');
 	add_action( 'admin_enqueue_scripts', 'lemonbox_load_admin_shop_assets' );
 	add_action( 'lemonbox_post_payments', 'lemonbox_post_payments', 10, 0 );
+
+    add_action( 'add_meta_boxes','store_meta_boxes' );
+    add_action( 'save_post','save_product_details' );
 
 	add_action( 'wp_ajax_lemonbox_update_shop_settings', 'lemonbox_update_shop_settings' );
 ?>
