@@ -37,7 +37,7 @@
             'public'        		=> true,
             'menu_position' 		=> 7,
             'taxonomies' 			=> array('product_category'),
-            'supports'      		=> array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+            'supports'      		=> array( 'title', 'editor', 'thumbnail' ),
             'has_archive'   		=> true,
             'show_in_nav_menus' 	=> true,
             'rewrite'           	=> array( 'slug' => 'products' ),
