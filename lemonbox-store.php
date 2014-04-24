@@ -237,6 +237,14 @@
 
     }
 
+    function lbox_forms_add_product_field() {
+        include( plugin_dir_path( __FILE__) . 'templates/product-field.php' );
+    }
+
+    function lbox_forms_add_product_settings() {
+        include( plugin_dir_path( __FILE__) . 'templates/product-field-settings.php' );
+    }
+
 	add_action( 'init', 'lbox_shop_init' );
 	add_action(	'admin_menu', 'lemonbox_shop_admin_menu');
 	add_action( 'admin_enqueue_scripts', 'lemonbox_load_admin_shop_assets' );
@@ -246,4 +254,8 @@
     add_action( 'save_post','save_product_details' );
 
 	add_action( 'wp_ajax_lemonbox_update_shop_settings', 'lemonbox_update_shop_settings' );
+    
+    add_action( 'lbox_form_fields', 'lbox_forms_add_product_field', 10 );
+    add_action( 'lbox_form_settings', 'lbox_forms_add_product_settings', 10 );
+
 ?>
