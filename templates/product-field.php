@@ -1,9 +1,12 @@
 <button>Product
-	<div class="form-group" data-field-type="product">
+	<div class="field form-group" data-field-type="product">
+		<label>Amount</label>
+		<input name="fields[amount]" class="form-control" />
+	</div>
+	<div class="field form-group" data-field-type="product" data-disable-name="true" data-disable-placeholder="true">
 		<label>Product</label>
-		<select name="field[product]">
-			<option>--</option>
+		<select name="fields[product_id]" class="form-control">
+			<option value="">--</option>
 		</select>
-		<input type="hidden" name="actions[buy_product]" value="" />
 	</div>
 </button>
