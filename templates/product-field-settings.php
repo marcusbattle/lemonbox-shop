@@ -58,7 +58,7 @@
 				}
 
 			});
-
+			
 		})(jQuery);
 	</script>
 </div>
