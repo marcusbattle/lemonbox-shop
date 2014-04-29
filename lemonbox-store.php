@@ -119,6 +119,10 @@
 
     }
 
+    function lbox_shop_scripts() {
+        wp_enqueue_script( 'lbox-forms-productfield', plugin_dir_url( __FILE__ ) . '/assets/js/lemonbox.forms.productfield.js', array('jquery'), false, true );
+    }
+
     function lemonbox_load_admin_shop_assets() {
     	wp_enqueue_script( 'lemonbox-shop-admin-js', plugin_dir_url( __FILE__ ) . '/assets/js/lemonbox.shop.admin.js', array('jquery') );
     	wp_localize_script( 'lemonbox-shop-admin-js', 'lemonbox', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
@@ -221,9 +225,22 @@
 
         $product_price = get_post_meta( $post->ID, 'product_price', true );
 
+        echo '<p><strong>Payment Type</strong></p>';
+        echo '<select name="payment_type">';
+        echo '<option value="">--</option>';
+        echo '<option value="free">Free</option>';
+        echo '<option value="donation">Donation</option>';
+        echo '<option value="fixed">Fixed</option>';
+        echo '</select>';
+        
+        echo '<div style="display: none;">';
         echo '<p><strong>Price</strong></p>';
         echo '<input type="text" name="product_price" placeholder="$10.00" value="' . $product_price . '" />';
-        echo '<a href="#" id="insert-media-button" class="button insert-media add_media" data-editor="excerpt" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a>';
+        echo '</div>';
+
+        // echo '<a href="#" id="insert-media-button" class="button insert-media add_media" data-editor="excerpt" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a>';
+        
+
     }
 
     function save_product_details( $post_id ) {
@@ -231,8 +248,12 @@
         if (isset($_REQUEST['product_price'])) {
 
             $_REQUEST['product_price'] = str_replace('$', '', $_REQUEST['product_price']);
-            update_post_meta($post_id, 'product_price', $_REQUEST['product_price']);
+            update_post_meta( $post_id, 'product_price', $_REQUEST['product_price'] );
 
+        }
+
+        if (isset($_REQUEST['payment_type'])) {
+            update_post_meta( $post_id, 'payment_type', $_REQUEST['payment_type'] );
         }
 
     }
@@ -246,7 +267,8 @@
     }
 
 	add_action( 'init', 'lbox_shop_init' );
-	add_action(	'admin_menu', 'lemonbox_shop_admin_menu');
+	add_action( 'wp_enqueue_scripts', 'lbox_shop_scripts' );
+    add_action(	'admin_menu', 'lemonbox_shop_admin_menu');
 	add_action( 'admin_enqueue_scripts', 'lemonbox_load_admin_shop_assets' );
 	add_action( 'lemonbox_post_payments', 'lemonbox_post_payments', 10, 0 );
 
