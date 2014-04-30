@@ -1,17 +1,18 @@
 (function($){
 	
-	$('select[name="fields[product_id]"]').on( 'change', function(){
+	$('select[name="fields[product_id][]"]').on( 'change', function(){
 
 		var selected = $(this).find('option:selected');
 		var payment_type = selected.data('payment-type');
+		var amount_field = selected.closest('.field').find('input[name="fields[amount][]"]');
 
 		if( payment_type && ( payment_type != 'free' ) ) {
 
-			$('div[data-field-type="amount"]').removeClass('hide');
+			amount_field.val('$100');
 
 		} else {
 			
-			$('div[data-field-type="amount"]').addClass('hide');
+			amount_field.val('$1000');
 
 		}
 
