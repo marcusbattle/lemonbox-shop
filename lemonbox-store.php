@@ -219,23 +219,25 @@
 
     function store_meta_boxes() {
         add_meta_box( 'product_details', 'Product Details', 'product_meta_box_product_details', 'lemonbox_product', 'normal', 'high' );
+        add_meta_box( 'inventory_details', 'Inventory', 'lbox_meta_box_product_inventory_details', 'lemonbox_product', 'normal', 'high' );
     }
 
     function product_meta_box_product_details( $post ) {
 
-        $product_price = get_post_meta( $post->ID, 'product_price', true );
+        $amount = get_post_meta( $post->ID, 'amount', true );
+        $payment_type = get_post_meta( $post->ID, 'payment_type', true );
 
         echo '<p><strong>Payment Type</strong></p>';
-        echo '<select name="payment_type">';
+        echo "<select name=\"payment_type\" data-value=\"$payment_type\">";
         echo '<option value="">--</option>';
         echo '<option value="free">Free</option>';
         echo '<option value="donation">Donation</option>';
         echo '<option value="fixed">Fixed</option>';
         echo '</select>';
         
-        echo '<div style="display: none;">';
-        echo '<p><strong>Price</strong></p>';
-        echo '<input type="text" name="product_price" placeholder="$10.00" value="' . $product_price . '" />';
+        echo '<div id="product-amount-view" style="display: none;">';
+        echo '<p><strong>Amount</strong></p>';
+        echo '<input type="text" name="amount" placeholder="$10.00" value="' . $amount . '" />';
         echo '</div>';
 
         // echo '<a href="#" id="insert-media-button" class="button insert-media add_media" data-editor="excerpt" title="Add Media"><span class="wp-media-buttons-icon"></span> Add Media</a>';
@@ -243,12 +245,16 @@
 
     }
 
+    function lbox_meta_box_product_inventory_details() {
+        echo "quantity";
+    }
+
     function save_product_details( $post_id ) {
 
-        if (isset($_REQUEST['product_price'])) {
+        if (isset($_REQUEST['amount'])) {
 
-            $_REQUEST['product_price'] = str_replace('$', '', $_REQUEST['product_price']);
-            update_post_meta( $post_id, 'product_price', $_REQUEST['product_price'] );
+            $_REQUEST['amount'] = str_replace('$', '', $_REQUEST['amount']);
+            update_post_meta( $post_id, 'amount', $_REQUEST['amount'] );
 
         }
 

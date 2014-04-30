@@ -2,6 +2,29 @@
 
 	$(document).ready(function(){
 
+		// Amount here
+		$('select[name="payment_type"]').on('change', function(){
+			
+			if ( $(this).val() == 'free' ) {
+				
+				$('#product-amount-view input[name="amount"]').val('');
+				$('#product-amount-view').hide();
+
+			} else if ( $(this).val() == 'donation' ) { 
+
+				$('#product-amount-view').hide();
+
+			} else if ( $(this).val() == 'fixed' ) {
+
+				$('#product-amount-view').show();
+
+			}
+
+		});
+
+		$('select[name="payment_type"]').val( $('select[name="payment_type"]').data('value') ).change();
+
+
 		$('#lemonbox-shop-settings select[name="stripe_mode"]').val( $('#lemonbox-shop-settings select[name="stripe_mode"]').data('value') );
 
 		$('#lemonbox-shop-settings button[type="submit"]').on('click', function(e){

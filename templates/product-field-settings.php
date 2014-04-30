@@ -4,7 +4,10 @@
 			<label>Prdouct</label>
 			<select id="product_id" multiple style="width: 100%;">
 				<?php foreach( lbox_get_products() as $product ): ?>
-					<option value="<?php echo $product->ID ?>" data-price="40"><?php echo $product->post_title ?></option>
+					<option 
+						value="<?php echo $product->ID ?>" 
+						data-amount="<?php echo get_post_meta( $product->ID, 'amount', true ); ?>"
+						data-payment-type="<?php echo get_post_meta( $product->ID, 'payment_type', true ); ?>"><?php echo $product->post_title ?></option>
 				<?php endforeach; ?>
 			</select>
 			<small>Select multiple categories by holding control (command on Mac) and click</small>
