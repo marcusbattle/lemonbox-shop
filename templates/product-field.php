@@ -19,17 +19,17 @@
 		<div class="row row-1">
 			<div class="col-xs-8 col-sm-8 col-md-8">
 				<label>Credit Card</label>
-				<input type="text" class="form-control" placeholder="**** **** **** 0000" />
+				<input type="text" name="fields[card_number]" class="form-control" placeholder="**** **** **** 0000" />
 			</div>
 			<div class="col-xs-4 col-sm-4 col-md-4">
 				<label>Secuirty Code</label>
-				<input type="text" class="form-control" placeholder="•••" maxlength="3" />
+				<input type="text" name="fields[cvc_code]" class="form-control" placeholder="•••" maxlength="3" />
 			</div>
 		</div>
 		<div class="row row-2">
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<label>Name on Card</label>
-				<input type="text" name="name_on_card" class="form-control" placeholder="John Doe" />
+				<input type="text" name="fields[name_on_card]" class="form-control" placeholder="John Doe" />
 			</div>
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<label>Expiration</label>
